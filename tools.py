@@ -111,7 +111,17 @@ def get_response(question: str) -> dict:
                 "rank_fields": ["chunk_text"],
             },
         )
-        matches = results.get("matches", []) if isinstance(results, dict) else results.matches
+        # Pinecone 7.x returns a SearchRecordsResponse shaped like
+        # {"result": {"hits": [{"_id", "_score", "fields": {"chunk_text": ...}}]}}.
+        data = results.to_dict() if hasattr(results, "to_dict") else dict(results)
+        hits = (data.get("result") or {}).get("hits") or []
+        matches = [
+            {
+                "score": hit.get("_score", 0.0),
+                "metadata": {"chunk_text": (hit.get("fields") or {}).get("chunk_text", "")},
+            }
+            for hit in hits
+        ]
     except Exception:
         logger.exception("Pinecone search failed; falling back to keyword search")
         return _keyword_fallback(question)
@@ -123,9 +133,7 @@ def get_response(question: str) -> dict:
     wants_specific_fact = any(term in q_lower for term in _FALLBACK_TRIGGER_TERMS)
     top_text = ""
     if matches:
-        first = matches[0]
-        metadata = first.get("metadata", {}) if isinstance(first, dict) else getattr(first, "metadata", {})
-        top_text = (metadata or {}).get("chunk_text", "").lower()
+        top_text = matches[0]["metadata"]["chunk_text"].lower()
 
     if not matches or (wants_specific_fact and not any(t in top_text for t in _FALLBACK_TRIGGER_TERMS)):
         fallback = _keyword_fallback(question)

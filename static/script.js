@@ -9,29 +9,30 @@
   // ----- Interface translations -------------------------------------------
   // Keys mirror the data-i18n attributes in chatbot.html. "auto" reuses the
   // English chrome but still tells the server to reply in the user's language.
+  // The chatbot's name is 나누미 in Korean and "Nanumi" in every other language.
   const I18N = {
     en: {
       lang: 'en',
-      title: 'House of Sharing Chatbot',
+      title: 'House of Sharing Chatbot Nanumi',
       intro:
-        'This archive answers questions using testimony, historical records, and research ' +
+        'Nanumi answers questions using testimony, historical records, and research ' +
         'gathered by the House of Sharing (나눔의 집) and related sources documenting Japan’s ' +
-        'wartime military sexual slavery system. Answers are drawn strictly from the archive — ' +
-        'if something isn’t in the record, the assistant will say so.',
+        'wartime military sexual slavery system. Answers are drawn strictly from these ' +
+        'records — if something isn’t in them, Nanumi will say so.',
       welcome:
-        'Welcome. You can ask about survivors’ testimonies, the history of the comfort station ' +
-        'system, the Wednesday Demonstrations, government responses, or the House of Sharing itself. ' +
-        'What would you like to know?',
+        'Welcome! I’m Nanumi, the House of Sharing’s chatbot. You can ask about survivors’ ' +
+        'testimonies, the history of the comfort station system, the Wednesday Demonstrations, ' +
+        'government responses, or the House of Sharing itself. What would you like to know?',
       reset: 'New conversation',
       placeholder: 'Ask a question about this history…',
-      botLabel: 'Archive',
+      botLabel: 'Nanumi',
       youLabel: 'You',
       languageLabel: 'Answer language',
       suggestions: [
+        'Who were the Japanese military ‘comfort women’ victims?',
         'Who was Kim Hak-soon?',
         'What was the Kono Statement?',
-        'What is the House of Sharing?',
-        'Where is the House of Sharing located?',
+        'Tell me about the House of Sharing',
       ],
       noAnswer: 'Sorry, no answer was found.',
       errorGeneric: 'Something went wrong. Please try again.',
@@ -39,49 +40,50 @@
     },
     ko: {
       lang: 'ko',
-      title: '나눔의 집 챗봇',
+      title: '나눔의 집 챗봇 나누미',
       intro:
-        '이 아카이브는 나눔의 집과 관련 자료가 수집한 증언, 역사 기록, 연구 자료를 바탕으로 일본군 ' +
-        '위안부(전시 군 성노예) 제도에 관한 질문에 답합니다. 답변은 오직 이 아카이브의 자료에만 ' +
-        '근거하며, 기록에 없는 내용은 그렇다고 알려드립니다.',
+        '나누미는 나눔의 집과 관련 자료에 담긴 증언, 역사 기록, 연구 자료를 바탕으로 일본군 ' +
+        '‘위안부’ 피해의 역사에 관한 질문에 답해 드립니다. 답변은 오직 이 기록에만 근거하며, ' +
+        '기록에 없는 내용은 솔직하게 말씀드립니다.',
       welcome:
-        '환영합니다. 피해자들의 증언, 위안소 제도의 역사, 수요시위, 정부의 대응, 또는 나눔의 집에 ' +
-        '대해 질문하실 수 있습니다. 무엇이 궁금하신가요?',
+        '안녕하세요, 나눔의 집 챗봇 나누미입니다. 피해자 할머니들의 증언과 일본군 ‘위안부’ ' +
+        '제도의 역사, 수요시위, 정부의 대응, 나눔의 집에 대해 질문하실 수 있습니다. ' +
+        '무엇이 궁금하신가요?',
       reset: '새 대화',
-      placeholder: '이 역사에 대해 질문해 보세요…',
-      botLabel: '아카이브',
+      placeholder: '이 역사에 대해 질문해 주세요…',
+      botLabel: '나누미',
       youLabel: '나',
       languageLabel: '답변 언어',
       suggestions: [
-        '김학순은 누구인가요?',
-        '고노 담화란 무엇인가요?',
-        '나눔의 집은 무엇인가요?',
-        '나눔의 집은 어디에 있나요?',
+        '일본군 위안부 피해자란?',
+        '김학순은 누구셨나요?',
+        '고노 담화는 무엇이었나요?',
+        '나눔의 집에 대해서 알려줘',
       ],
-      noAnswer: '죄송합니다. 답변을 찾을 수 없습니다.',
+      noAnswer: '죄송합니다. 답변을 찾지 못했습니다.',
       errorGeneric: '문제가 발생했습니다. 다시 시도해 주세요.',
       errorNetwork: '서버에 연결할 수 없습니다. 연결 상태를 확인한 후 다시 시도해 주세요.',
     },
     ja: {
       lang: 'ja',
-      title: 'ナヌムの家チャットボット',
+      title: 'ナヌムの家チャットボット Nanumi',
       intro:
-        'このアーカイブは、ナヌムの家（House of Sharing）や関連資料が収集した証言・歴史記録・研究に基づき、' +
-        '日本の戦時における軍性奴隷制度に関する質問にお答えします。回答はこのアーカイブの資料のみに基づいており、' +
-        '記録にない場合はその旨をお伝えします。',
+        'Nanumiは、ナヌムの家（House of Sharing）や関連資料に収められた証言・歴史記録・研究に基づいて、' +
+        '日本軍「慰安婦」被害の歴史に関する質問にお答えします。回答はこれらの記録のみに基づいており、' +
+        '記録にない場合はその旨を正直にお伝えします。',
       welcome:
-        'ようこそ。被害者の証言、慰安所制度の歴史、水曜デモ、政府の対応、あるいはナヌムの家そのものについて' +
-        '質問できます。何をお知りになりたいですか？',
+        'こんにちは。ナヌムの家のチャットボット、Nanumiです。被害者の方々の証言、慰安所制度の歴史、' +
+        '水曜デモ、政府の対応、ナヌムの家についてご質問いただけます。何をお知りになりたいですか？',
       reset: '新しい会話',
       placeholder: 'この歴史について質問してください…',
-      botLabel: 'アーカイブ',
+      botLabel: 'Nanumi',
       youLabel: 'あなた',
       languageLabel: '回答の言語',
       suggestions: [
-        '金学順（キム・ハクスン）とは誰ですか？',
-        '河野談話とは何ですか？',
-        'ナヌムの家とは何ですか？',
-        'ナヌムの家はどこにありますか？',
+        '日本軍「慰安婦」被害者とは？',
+        '金学順（キム・ハクスン）さんはどのような方でしたか？',
+        '河野談話とは何でしたか？',
+        'ナヌムの家について教えてください',
       ],
       noAnswer: '申し訳ありません。回答が見つかりませんでした。',
       errorGeneric: '問題が発生しました。もう一度お試しください。',
@@ -89,22 +91,23 @@
     },
     zh: {
       lang: 'zh',
-      title: '分享之家聊天机器人',
+      title: '分享之家聊天机器人 Nanumi',
       intro:
-        '本资料库依据分享之家（나눔의 집）及相关来源收集的证词、历史记录与研究，回答有关日本战时军队性奴役' +
-        '制度的问题。回答仅依据本资料库的内容；如果记录中没有相关信息，助手会如实说明。',
+        'Nanumi 依据分享之家（나눔의 집）及相关来源收集的证词、历史记录与研究，回答有关日军' +
+        '“慰安妇”受害历史的问题。回答仅依据这些记录；如果记录中没有相关信息，Nanumi 会如实说明。',
       welcome:
-        '欢迎。您可以询问幸存者的证词、慰安所制度的历史、周三示威、政府的回应，或分享之家本身。您想了解什么？',
+        '您好，我是分享之家的聊天机器人 Nanumi。您可以询问幸存者的证词、慰安所制度的历史、' +
+        '周三示威、政府的回应，或分享之家本身。您想了解什么？',
       reset: '新对话',
       placeholder: '就这段历史提出问题…',
-      botLabel: '资料库',
+      botLabel: 'Nanumi',
       youLabel: '您',
       languageLabel: '回答语言',
       suggestions: [
+        '什么是日军“慰安妇”受害者？',
         '金学顺是谁？',
         '河野谈话是什么？',
-        '分享之家是什么？',
-        '分享之家在哪里？',
+        '请介绍一下分享之家',
       ],
       noAnswer: '抱歉，未找到答案。',
       errorGeneric: '出现问题，请重试。',
@@ -112,26 +115,28 @@
     },
     es: {
       lang: 'es',
-      title: 'Chatbot de la Casa del Compartir',
+      title: 'Nanumi: Chatbot de la Casa del Compartir',
       intro:
-        'Este archivo responde preguntas a partir de testimonios, registros históricos e investigaciones ' +
-        'reunidos por la Casa del Compartir (나눔의 집) y fuentes relacionadas que documentan el sistema de ' +
-        'esclavitud sexual militar de Japón durante la guerra. Las respuestas se basan únicamente en el ' +
-        'archivo; si algo no consta en el registro, el asistente lo indicará.',
+        'Nanumi responde a las preguntas a partir de testimonios, registros históricos e ' +
+        'investigaciones reunidos por la Casa del Compartir (나눔의 집) y fuentes relacionadas ' +
+        'que documentan el sistema de esclavitud sexual militar de Japón durante la guerra. ' +
+        'Las respuestas se basan únicamente en estos registros; si algo no consta en ellos, ' +
+        'Nanumi se lo indicará.',
       welcome:
-        'Bienvenido/a. Puede preguntar sobre los testimonios de las sobrevivientes, la historia del sistema ' +
-        'de «estaciones de consuelo», las Manifestaciones de los Miércoles, las respuestas de los gobiernos ' +
-        'o la propia Casa del Compartir. ¿Qué le gustaría saber?',
+        'Bienvenido/a. Soy Nanumi, el chatbot de la Casa del Compartir. Puede preguntar sobre ' +
+        'los testimonios de las sobrevivientes, la historia del sistema de «estaciones de ' +
+        'consuelo», las Manifestaciones de los Miércoles, las respuestas de los gobiernos o la ' +
+        'propia Casa del Compartir. ¿Qué le gustaría saber?',
       reset: 'Nueva conversación',
       placeholder: 'Haga una pregunta sobre esta historia…',
-      botLabel: 'Archivo',
+      botLabel: 'Nanumi',
       youLabel: 'Usted',
       languageLabel: 'Idioma de la respuesta',
       suggestions: [
+        '¿Quiénes fueron las víctimas del sistema de «mujeres de consuelo»?',
         '¿Quién fue Kim Hak-soon?',
         '¿Qué fue la Declaración de Kono?',
-        '¿Qué es la Casa del Compartir?',
-        '¿Dónde se encuentra la Casa del Compartir?',
+        'Cuénteme sobre la Casa del Compartir',
       ],
       noAnswer: 'Lo sentimos, no se encontró ninguna respuesta.',
       errorGeneric: 'Algo salió mal. Inténtelo de nuevo.',
@@ -139,26 +144,28 @@
     },
     fr: {
       lang: 'fr',
-      title: 'Chatbot de la Maison du Partage',
+      title: 'Nanumi : Chatbot de la Maison du Partage',
       intro:
-        'Ces archives répondent aux questions à partir de témoignages, de documents historiques et de ' +
-        'recherches rassemblés par la Maison du Partage (나눔의 집) et des sources connexes documentant le ' +
-        'système d’esclavage sexuel militaire du Japon pendant la guerre. Les réponses s’appuient ' +
-        'uniquement sur ces archives ; si une information n’y figure pas, l’assistant le précisera.',
+        'Nanumi répond aux questions à partir de témoignages, de documents historiques et de ' +
+        'recherches rassemblés par la Maison du Partage (나눔의 집) et des sources connexes ' +
+        'documentant le système d’esclavage sexuel militaire du Japon pendant la guerre. ' +
+        'Les réponses s’appuient uniquement sur ces documents ; si une information n’y figure ' +
+        'pas, Nanumi vous le précisera.',
       welcome:
-        'Bienvenue. Vous pouvez poser des questions sur les témoignages des survivantes, l’histoire du ' +
-        'système des « stations de réconfort », les Manifestations du mercredi, les réponses des ' +
-        'gouvernements ou la Maison du Partage elle-même. Que souhaitez-vous savoir ?',
+        'Bienvenue. Je suis Nanumi, le chatbot de la Maison du Partage. Vous pouvez poser des ' +
+        'questions sur les témoignages des survivantes, l’histoire du système des « stations de ' +
+        'réconfort », les Manifestations du mercredi, les réponses des gouvernements ou la ' +
+        'Maison du Partage elle-même. Que souhaitez-vous savoir ?',
       reset: 'Nouvelle conversation',
       placeholder: 'Posez une question sur cette histoire…',
-      botLabel: 'Archives',
+      botLabel: 'Nanumi',
       youLabel: 'Vous',
       languageLabel: 'Langue de la réponse',
       suggestions: [
-        'Qui était Kim Hak-soon ?',
-        'Qu’était la déclaration de Kono ?',
-        'Qu’est-ce que la Maison du Partage ?',
-        'Où se trouve la Maison du Partage ?',
+        'Qui étaient les victimes du système des « femmes de réconfort » ?',
+        'Qui était Kim Hak-soon ?',
+        'Qu’était la déclaration de Kono ?',
+        'Parlez-moi de la Maison du Partage',
       ],
       noAnswer: 'Désolé, aucune réponse n’a été trouvée.',
       errorGeneric: 'Une erreur s’est produite. Veuillez réessayer.',
@@ -166,26 +173,28 @@
     },
     de: {
       lang: 'de',
-      title: 'House-of-Sharing-Chatbot',
+      title: 'House-of-Sharing-Chatbot Nanumi',
       intro:
-        'Dieses Archiv beantwortet Fragen auf der Grundlage von Zeugenaussagen, historischen Aufzeichnungen ' +
-        'und Forschungen, die vom House of Sharing (나눔의 집) und verwandten Quellen zum System der ' +
-        'militärischen Sexsklaverei Japans während des Krieges zusammengetragen wurden. Die Antworten stützen ' +
-        'sich ausschließlich auf dieses Archiv; fehlt eine Information, weist der Assistent darauf hin.',
+        'Nanumi beantwortet Fragen auf der Grundlage von Zeugenaussagen, historischen ' +
+        'Aufzeichnungen und Forschungen, die vom House of Sharing (나눔의 집) und verwandten ' +
+        'Quellen zum System der militärischen Sexsklaverei Japans während des Krieges ' +
+        'zusammengetragen wurden. Die Antworten stützen sich ausschließlich auf diese ' +
+        'Aufzeichnungen; fehlt eine Information, sagt Nanumi das offen.',
       welcome:
-        'Willkommen. Sie können nach den Zeugenaussagen der Überlebenden, der Geschichte des Systems der ' +
-        '„Troststationen“, den Mittwochsdemonstrationen, den Reaktionen der Regierungen oder dem ' +
-        'House of Sharing selbst fragen. Was möchten Sie wissen?',
+        'Willkommen! Ich bin Nanumi, der Chatbot des House of Sharing. Sie können nach den ' +
+        'Zeugenaussagen der Überlebenden, der Geschichte des Systems der „Troststationen“, den ' +
+        'Mittwochsdemonstrationen, den Reaktionen der Regierungen oder dem House of Sharing ' +
+        'selbst fragen. Was möchten Sie wissen?',
       reset: 'Neues Gespräch',
       placeholder: 'Stellen Sie eine Frage zu dieser Geschichte…',
-      botLabel: 'Archiv',
+      botLabel: 'Nanumi',
       youLabel: 'Sie',
       languageLabel: 'Antwortsprache',
       suggestions: [
+        'Wer waren die Opfer des „Trostfrauen“-Systems?',
         'Wer war Kim Hak-soon?',
         'Was war die Kono-Erklärung?',
-        'Was ist das House of Sharing?',
-        'Wo befindet sich das House of Sharing?',
+        'Erzählen Sie mir vom House of Sharing',
       ],
       noAnswer: 'Leider wurde keine Antwort gefunden.',
       errorGeneric: 'Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.',
@@ -223,6 +232,13 @@
     });
 
     userInput.placeholder = t.placeholder;
+
+    // The small line above the heading pairs the two names: it shows the
+    // Korean name normally, and the English name when the page is in Korean.
+    const brandKr = document.querySelector('.brand-kr');
+    if (brandKr) {
+      brandKr.textContent = t.lang === 'ko' ? 'House of Sharing Chatbot Nanumi' : '나눔의 집 챗봇 나누미';
+    }
 
     if (suggestions) {
       suggestions.querySelectorAll('.chip').forEach((chip, i) => {
