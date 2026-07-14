@@ -23,8 +23,8 @@ logger = logging.getLogger(__name__)
 MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 SYSTEM_PROMPT = (
-    "You can call a function to retrieve information about comfort women "
-    "(Japanese military sexual slavery victims) that is most relevant to "
+    "You can call a function to retrieve information about the 'comfort women' "
+    "(victims of Japanese military sexual slavery) that is most relevant to "
     "the user's question. Always call this function before answering a "
     "question that requires factual, historical, or biographical information. "
     "The knowledge base is written in English, so when you call the function, "
@@ -72,7 +72,14 @@ def _answer_instructions(language: str) -> str:
         "use formal polite speech (존댓말, -습니다/-세요 endings) and refer to "
         "survivors with respectful honorific expressions such as '피해자 할머니들' "
         "or '김학순 할머니'. When answering in Japanese, use polite です/ます forms. "
-        "Avoid graphic detail that is not necessary for historical understanding.\n\n"
+        "Avoid graphic detail that is not necessary for historical understanding.\n"
+        "6. Terminology: the victims themselves rejected the euphemism 'comfort "
+        "women', so never use it as a plain label for the people. Whenever the "
+        "historical term is needed, write it in quotation marks — 'comfort women' "
+        "in English, 일본군 '위안부' in Korean — and refer to the people as "
+        "\"'comfort women' victims\", \"victims\", \"survivors\", or \"victims of "
+        "Japanese military sexual slavery\", never as plain \"comfort women\". "
+        "Apply the same respectful, quoted usage in every language you answer in.\n\n"
         f"{_language_directive(language)}"
     )
 
