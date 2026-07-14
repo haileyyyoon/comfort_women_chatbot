@@ -464,6 +464,10 @@ body {
   font-weight: 600;
 }
 
+.site-footer p + p {
+  margin-top: 6px;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 600px) {
