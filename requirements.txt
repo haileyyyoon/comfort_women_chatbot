@@ -4,3 +4,5 @@ httpx==0.27.2
 python-dotenv==1.0.1
 gunicorn==22.0.0
 pinecone==7.3.0
+gspread==6.1.4
+cryptography==43.0.3

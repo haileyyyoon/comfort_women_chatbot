@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 .DS_Store
 .claude/
+google_credentials.json
+*service-account*.json

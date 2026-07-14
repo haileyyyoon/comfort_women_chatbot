@@ -63,6 +63,7 @@ way while staying strictly grounded in the archive.
 ├── ingest.py                # Run this once to build/refresh the Pinecone index
 ├── requirements.txt
 ├── Procfile                 # Process definition for Heroku-style deploys
+├── sheet_logger.py           # Optional: logs each Q&A to a Google Sheet
 ├── .env.example             # Copy to .env and fill in your keys
 ├── data/
 │   └── comfortwomen_text.txt   # Source archive the chatbot answers from
@@ -155,6 +156,51 @@ gunicorn -w 2 -b 0.0.0.0:8080 app:app
 Whatever platform you deploy to (Render, Railway, Fly.io, a VPS, etc.),
 set the same environment variables from `.env` in that platform's
 dashboard/secrets manager — don't upload your `.env` file itself.
+
+## Optional: log Q&A pairs to a Google Sheet
+
+The chatbot can append every question/answer pair (with a timestamp and
+language) to a Google Sheet, so museum staff can review what visitors are
+asking. This is off by default and entirely optional — the chatbot works
+fine without it.
+
+**1. Create a Google service account** (a robot identity Google APIs use
+instead of a personal login):
+- Go to [console.cloud.google.com](https://console.cloud.google.com) and
+  create/select a project.
+- **APIs & Services → Library** → search "Google Sheets API" → **Enable**.
+- **APIs & Services → Credentials → + Create Credentials → Service account**.
+  Give it a name, click through the remaining steps (no project role needed).
+- Open the service account → **Keys** tab → **Add Key → Create new key** →
+  choose **JSON**. This downloads a key file — treat it like a password.
+
+**2. Share your Sheet with it**
+- Open the downloaded JSON and copy the `client_email` value
+  (looks like `something@your-project.iam.gserviceaccount.com`).
+- Open the Google Sheet you want to log to, click **Share**, paste that
+  email, and give it **Editor** access.
+
+**3. Configure the app**
+- Save the JSON key file somewhere in the project folder (it's already
+  gitignored — never commit it) and set in `.env`:
+  ```
+  GOOGLE_SHEETS_CREDENTIALS_PATH=google_credentials.json
+  GOOGLE_SHEET_ID=<the long ID in the sheet's URL>
+  ```
+- The target worksheet (tab) defaults to `Sheet1` and is created
+  automatically with headers if it doesn't exist; override the name with
+  `GOOGLE_SHEET_WORKSHEET_NAME` if you want a different tab.
+
+**On Render:** don't upload the JSON key as a normal environment variable —
+use Render's **Secret Files** feature instead (Dashboard → your service →
+Environment → Secret Files) to mount the file at a path like
+`/etc/secrets/google_credentials.json`, then set
+`GOOGLE_SHEETS_CREDENTIALS_PATH=/etc/secrets/google_credentials.json` as a
+regular environment variable.
+
+Logging is best-effort: if the Sheet isn't configured, or a write fails
+(network hiccup, revoked access, etc.), the chatbot still answers normally
+and just skips that row — it never blocks or breaks a chat response.
 
 ## Notes on content
 

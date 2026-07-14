@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request, session
 
 from rag import chatbot_response
+from sheet_logger import log_qa
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
@@ -58,6 +59,8 @@ def chat():
 
     chat_history.append({"role": "assistant", "content": response_text})
     session["chat_history"] = chat_history[-MAX_HISTORY:]
+
+    log_qa(question, response_text, language)
 
     return jsonify({"response": response_text})
 
