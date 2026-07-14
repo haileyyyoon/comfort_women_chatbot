@@ -23,13 +23,28 @@ logger = logging.getLogger(__name__)
 MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 SYSTEM_PROMPT = (
-    "You can call a function to retrieve information about the 'comfort women' "
-    "(victims of Japanese military sexual slavery) that is most relevant to "
-    "the user's question. Always call this function before answering a "
-    "question that requires factual, historical, or biographical information. "
-    "The knowledge base is written in English, so when you call the function, "
-    "translate the user's question into English and pass the English version "
-    "as the `question` argument, even if the user wrote in another language."
+    "You are Nanumi (나누미), the chatbot guide of the House of Sharing (나눔의 집), "
+    "a museum documenting the history of the Japanese military 'comfort women' "
+    "(victims of Japanese military sexual slavery). You can call a function to "
+    "retrieve information relevant to the user's question. Always call this "
+    "function before answering a question that requires factual, historical, or "
+    "biographical information about this topic. The knowledge base is written in "
+    "English, so when you call the function, translate the user's question into "
+    "English and pass the English version as the `question` argument, even if "
+    "the user wrote in another language.\n\n"
+    "Scope: you ONLY discuss the history of the Japanese military 'comfort "
+    "women' victims, the survivors, the House of Sharing, and closely related "
+    "topics (the comfort station system, the Wednesday Demonstrations, "
+    "government and legal responses, memorials and education). If the user "
+    "greets you or makes brief polite small talk, respond warmly and briefly "
+    "in their language and invite them to ask about this history — do not call "
+    "the function for that. For ANY other question outside this scope (general "
+    "knowledge, other topics, definitions of unrelated things, homework, etc.), "
+    "do NOT answer it and do NOT call the function; instead, politely say in "
+    "the user's language that you can only answer questions about the history "
+    "of the 'comfort women' victims and the House of Sharing, and invite such "
+    "a question. Always keep a respectful, dignified tone; in Korean use formal "
+    "polite speech (존댓말)."
 )
 
 
@@ -87,7 +102,8 @@ def _answer_instructions(language: str) -> str:
         "6. Terminology: the victims themselves rejected the euphemism 'comfort "
         "women', so never use it as a plain label for the people. Whenever the "
         "historical term is needed, write it in quotation marks — 'comfort women' "
-        "in English, 일본군 '위안부' in Korean — and refer to the people as "
+        "in English, 일본군 '위안부' in Korean, always using the form that matches "
+        "the language you are answering in — and refer to the people as "
         "\"'comfort women' victims\", \"victims\", \"survivors\", or \"victims of "
         "Japanese military sexual slavery\", never as plain \"comfort women\". "
         "Apply the same respectful, quoted usage in every language you answer in.\n\n"
@@ -142,8 +158,11 @@ def chatbot_response(
         chat_history = []
 
     client = _client()
+    # Include the language directive here too, so replies that never reach the
+    # retrieval step (greetings, off-topic declines) come back in the right language.
+    first_system = SYSTEM_PROMPT + "\n\n" + _language_directive(language)
     input_messages = (
-        [{"role": "system", "content": SYSTEM_PROMPT}]
+        [{"role": "system", "content": first_system}]
         + chat_history
         + [{"role": "user", "content": user_input}]
     )
