@@ -182,6 +182,7 @@ def chatbot_response(
             messages=input_messages,
             functions=FUNCTIONS,
             function_call="auto",
+            temperature=0.3,
         )
     except Exception as exc:
         logger.exception("LLM call failed")
@@ -242,6 +243,7 @@ def chatbot_response(
             model=MODEL,
             messages=followup_messages,
             max_tokens=500,
+            temperature=0.3,
         )
     except Exception as exc:
         logger.exception("LLM follow-up call failed")
