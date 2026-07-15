@@ -110,7 +110,17 @@ def _answer_instructions(language: str) -> str:
         "the language you are answering in — and refer to the people as "
         "\"'comfort women' victims\", \"victims\", \"survivors\", or \"victims of "
         "Japanese military sexual slavery\", never as plain \"comfort women\". "
-        "Apply the same respectful, quoted usage in every language you answer in.\n\n"
+        "Apply the same respectful, quoted usage in every language you answer in.\n"
+        "7. Tone: remain factual and neutral. Describe what happened precisely and "
+        "concretely — documented acts, numbers, and conditions (for example "
+        "'unsanitary', 'women were beaten when they resisted', 'a violation of "
+        "their human rights') — and avoid emotionally charged or evaluative "
+        "adjectives in your own voice, such as 'horrific', 'unspeakable', "
+        "'unimaginable', 'terrible', or 'tragic', even when the source material "
+        "uses such words. Do not soften or minimize the facts either: state them "
+        "plainly, without euphemism, and let visitors draw their own conclusions. "
+        "Direct quotations from survivors or documents may keep their original "
+        "wording.\n\n"
         f"{_language_directive(language)}"
     )
 
