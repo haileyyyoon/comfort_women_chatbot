@@ -173,7 +173,12 @@ def _answer_instructions(language: str) -> str:
         "uses such words. Do not soften or minimize the facts either: state them "
         "plainly, without euphemism, and let visitors draw their own conclusions. "
         "Direct quotations from survivors or documents may keep their original "
-        "wording.\n\n"
+        "wording.\n"
+        "8. If the retrieved material includes a section marked [한국어 원문 자료] "
+        "(the museum's own Korean texts), base your Korean wording directly on "
+        "those passages — reuse their phrasing and vocabulary rather than "
+        "translating from English. Use the English section only for facts not "
+        "covered by the Korean passages.\n\n"
         f"{_language_directive(language)}"
     )
 
@@ -206,14 +211,27 @@ def _client() -> OpenAI:
     return OpenAI(api_key=api_key)
 
 
-def _extract_chunks(pinecone_results: dict) -> list[str]:
-    chunks = []
+def _build_context(pinecone_results: dict) -> str:
+    """Join retrieved chunks, separating the museum's Korean originals from
+    the English archive so the model can prefer the Korean wording."""
+    ko_chunks, en_chunks = [], []
     for match in pinecone_results.get("matches", []):
         metadata = match.get("metadata", {}) or match.get("fields", {})
         chunk = metadata.get("chunk_text") or match.get("chunk_text", "")
-        if chunk:
-            chunks.append(chunk)
-    return chunks
+        if not chunk:
+            continue
+        if metadata.get("lang") == "ko":
+            ko_chunks.append(chunk)
+        else:
+            en_chunks.append(chunk)
+
+    sections = []
+    if ko_chunks:
+        sections.append("[한국어 원문 자료]\n" + "\n\n".join(ko_chunks))
+    if en_chunks:
+        header = "[English source material]\n" if ko_chunks else ""
+        sections.append(header + "\n\n".join(en_chunks))
+    return "\n\n".join(sections)
 
 
 def chatbot_response(
@@ -262,13 +280,16 @@ def chatbot_response(
         return "Sorry, something went wrong while processing your question."
 
     try:
-        retrieval_results = get_response(**args)
+        retrieval_results = get_response(
+            question=args.get("question", user_input),
+            language=language,
+            original_question=user_input,
+        )
     except Exception as exc:
         logger.exception("Retrieval failed")
         return f"Sorry, I couldn't retrieve information right now: {exc}"
 
-    top_chunks = _extract_chunks(retrieval_results)
-    combined_context = "\n\n".join(top_chunks)
+    combined_context = _build_context(retrieval_results)
 
     followup_messages = (
         [{"role": "system", "content": _answer_instructions(language)}]

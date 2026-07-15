@@ -25,8 +25,13 @@ logger = logging.getLogger(__name__)
 
 INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "comfort-women-rag")
 NAMESPACE = os.getenv("PINECONE_NAMESPACE", "ns1")
+NAMESPACE_KO = os.getenv("PINECONE_NAMESPACE_KO", "ns-ko")
 TOP_K = int(os.getenv("RAG_TOP_K", "5"))
 DATA_FILE = Path(__file__).parent / "data" / "comfortwomen_text.txt"
+
+
+def _contains_hangul(text: str) -> bool:
+    return any("가" <= ch <= "힣" for ch in text or "")
 
 # A handful of location/contact terms used to sanity-check semantic
 # search results and trigger the keyword fallback when needed.
@@ -93,35 +98,64 @@ def _keyword_fallback(question: str):
     }
 
 
-def get_response(question: str) -> dict:
+def _search_namespace(index, namespace: str, query_text: str, top_k: int, lang: str) -> list[dict]:
+    """Run one semantic search and normalize Pinecone 7.x hits into match dicts."""
+    results = index.search(
+        namespace=namespace,
+        query={"top_k": top_k, "inputs": {"text": query_text}},
+        rerank={
+            "model": "bge-reranker-v2-m3",
+            "top_n": top_k,
+            "rank_fields": ["chunk_text"],
+        },
+    )
+    # Pinecone 7.x returns a SearchRecordsResponse shaped like
+    # {"result": {"hits": [{"_id", "_score", "fields": {"chunk_text": ...}}]}}.
+    data = results.to_dict() if hasattr(results, "to_dict") else dict(results)
+    hits = (data.get("result") or {}).get("hits") or []
+    return [
+        {
+            "score": hit.get("_score", 0.0),
+            "metadata": {
+                "chunk_text": (hit.get("fields") or {}).get("chunk_text", ""),
+                "lang": lang,
+            },
+        }
+        for hit in hits
+    ]
+
+
+def get_response(question: str, language: str = "auto", original_question: str = "") -> dict:
     """
-    Retrieve the passages most relevant to `question`.
+    Retrieve the passages most relevant to `question` (English).
+
+    For Korean answers, the museum's own Korean texts are searched as well —
+    using the visitor's original Korean question — and returned FIRST, so the
+    model can quote the museum's Korean wording directly instead of
+    translating the English archive.
 
     Returns a dict shaped like `{"matches": [{"score": ..., "metadata": {"chunk_text": ...}}, ...]}`
     so callers can treat Pinecone results and the keyword fallback identically.
     """
+    wants_korean = language == "Korean" or (
+        language in ("auto", "") and _contains_hangul(original_question)
+    )
+
     try:
         index = _get_index()
-        results = index.search(
-            namespace=NAMESPACE,
-            query={"top_k": TOP_K, "inputs": {"text": question}},
-            rerank={
-                "model": "bge-reranker-v2-m3",
-                "top_n": TOP_K,
-                "rank_fields": ["chunk_text"],
-            },
-        )
-        # Pinecone 7.x returns a SearchRecordsResponse shaped like
-        # {"result": {"hits": [{"_id", "_score", "fields": {"chunk_text": ...}}]}}.
-        data = results.to_dict() if hasattr(results, "to_dict") else dict(results)
-        hits = (data.get("result") or {}).get("hits") or []
-        matches = [
-            {
-                "score": hit.get("_score", 0.0),
-                "metadata": {"chunk_text": (hit.get("fields") or {}).get("chunk_text", "")},
-            }
-            for hit in hits
-        ]
+
+        ko_matches = []
+        if wants_korean:
+            try:
+                ko_query = original_question if _contains_hangul(original_question) else question
+                ko_matches = _search_namespace(index, NAMESPACE_KO, ko_query, TOP_K, "ko")
+            except Exception:
+                # The Korean namespace is an enhancement, not a requirement:
+                # if it fails (e.g. not ingested yet), English results still flow.
+                logger.exception("Korean-namespace search failed; continuing with English only")
+
+        en_top_k = 3 if ko_matches else TOP_K
+        matches = _search_namespace(index, NAMESPACE, question, en_top_k, "en")
     except Exception:
         logger.exception("Pinecone search failed; falling back to keyword search")
         return _keyword_fallback(question)
@@ -138,6 +172,7 @@ def get_response(question: str) -> dict:
     if not matches or (wants_specific_fact and not any(t in top_text for t in _FALLBACK_TRIGGER_TERMS)):
         fallback = _keyword_fallback(question)
         if fallback["matches"]:
-            return fallback
+            matches = fallback["matches"]
 
-    return {"matches": matches}
+    # Korean museum-text passages first, then English archive passages.
+    return {"matches": ko_matches + matches}
